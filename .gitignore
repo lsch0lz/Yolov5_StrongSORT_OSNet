@@ -1,4 +1,7 @@
 .vscode/
+.DS_Store
+.idea/
+venv
 
 # interpreter bytecode
 __pycache__/

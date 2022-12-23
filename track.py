@@ -55,7 +55,7 @@ def run(
         save_conf=False,  # save confidences in --save-txt labels
         save_crop=False,  # save cropped prediction boxes
         save_trajectories=False,  # save trajectories for each track
-        save_vid=False,  # save confidences in --save-txt labels
+        save_vid=True,  # save confidences in --save-txt labels
         nosave=False,  # do not save images/videos
         classes=None,  # filter by class: --class 0, or --class 0 2 3
         agnostic_nms=False,  # class-agnostic NMS
@@ -239,8 +239,7 @@ def run(
                             annotator.box_label(bbox, label, color=color)
 
                             if save_trajectories and tracking_method == 'strongsort':
-                                q = output[7]
-                                tracker_list[i].trajectory(im0, q, color=color)
+                                tracker_list[i].trajectory(im0, tracker_list[i].tracker.tracks, color=color)
                             if save_crop:
                                 txt_file_name = txt_file_name if (isinstance(path, list) and len(path) > 1) else ''
                                 save_one_box(bbox.astype(np.int16), imc, file=save_dir / 'crops' / txt_file_name / names[c] / f'{id}' / f'{p.stem}.jpg', BGR=True)
