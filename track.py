@@ -225,10 +225,11 @@ def run(
                             bbox_top = output[1]
                             bbox_w = output[2] - output[0]
                             bbox_h = output[3] - output[1]
+                            x_center = (output[0] + output[2]) / 2
+                            y_center = (output[1] + output[3]) / 2
                             # Write MOT compliant results to file
                             with open(txt_path + '.txt', 'a') as f:
-                                f.write(('%g ' * 10 + '\n') % (frame_idx + 1, id, bbox_left,  # MOT format
-                                                               bbox_top, bbox_w, bbox_h, -1, -1, -1, i))
+                                f.write((f"{float(frame_idx)}\t{id}\t{x_center}\t{y_center}" + '\n'))
 
                         if save_vid or save_crop or show_vid:  # Add bbox to image
                             c = int(cls)  # integer class
@@ -240,6 +241,8 @@ def run(
 
                             if save_trajectories and tracking_method == 'strongsort':
                                 tracker_list[i].trajectory(im0, tracker_list[i].tracker.tracks, color=color)
+                                print(output)
+
                             if save_crop:
                                 txt_file_name = txt_file_name if (isinstance(path, list) and len(path) > 1) else ''
                                 save_one_box(bbox.astype(np.int16), imc, file=save_dir / 'crops' / txt_file_name / names[c] / f'{id}' / f'{p.stem}.jpg', BGR=True)
@@ -334,6 +337,7 @@ def parse_opt():
 def main(opt):
     check_requirements(requirements=ROOT / 'requirements.txt', exclude=('tensorboard', 'thop'))
     run(**vars(opt))
+
 
 
 if __name__ == "__main__":
